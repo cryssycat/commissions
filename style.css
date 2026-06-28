@@ -1,92 +1,305 @@
+/* =========================
+   STAR HUB DESIGN SYSTEM
+========================= */
+
+:root {
+  --bg: #0b0f1a;
+  --panel: rgba(255, 255, 255, 0.06);
+  --panel-strong: rgba(255, 255, 255, 0.1);
+
+  --text: #e9ecff;
+  --muted: rgba(233, 236, 255, 0.65);
+
+  --accent-pink: #ff6bd6;
+  --accent-blue: #6bd6ff;
+  --accent-purple: #a78bfa;
+  --accent-mint: #5ef0c2;
+
+  --border: rgba(255, 255, 255, 0.12);
+  --shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+
+  --blur: blur(14px);
+}
+
+/* =========================
+   BASE RESET + TYPOGRAPHY
+========================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
-
-font-family:sans-serif;
-
-padding:40px;
-
-max-width:1400px;
-
-margin:auto;
-
+  background: radial-gradient(circle at top, #141a2e, var(--bg));
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  line-height: 1.6;
+  min-height: 100vh;
 }
 
-.hero {
-
-text-align:center;
-
-margin-bottom:50px;
-
+h1, h2, h3 {
+  letter-spacing: 0.5px;
 }
+
+p {
+  color: var(--muted);
+}
+
+/* =========================
+   LINKS + TEXT
+========================= */
+
+a {
+  color: var(--accent-blue);
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+a:hover {
+  color: var(--accent-pink);
+}
+
+/* =========================
+   GLASS PANEL SYSTEM
+========================= */
+
+.glass {
+  background: var(--panel);
+  backdrop-filter: var(--blur);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow);
+}
+
+.glass-strong {
+  background: var(--panel-strong);
+  backdrop-filter: var(--blur);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  cursor: pointer;
+  transition: 0.25s ease;
+  gap: 8px;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-pink);
+  box-shadow: 0 0 20px rgba(255, 107, 214, 0.25);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+  border: none;
+}
+
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+}
+
+/* =========================
+   CARDS (GENERAL)
+========================= */
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  box-shadow: var(--shadow);
+  transition: 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent-blue);
+}
+
+/* =========================
+   COMMISSION CARDS
+========================= */
 
 .commission-grid {
-
-display:grid;
-
-grid-template-columns:
-repeat(auto-fit,minmax(280px,1fr));
-
-gap:24px;
-
+  display: grid;
+  gap: 16px;
 }
 
-.glass-card {
-
-background:
-rgba(255,255,255,.15);
-
-backdrop-filter:
-blur(16px);
-
-border:
-1px solid rgba(255,255,255,.25);
-
-border-radius:24px;
-
-padding:20px;
-
+.commission-card {
+  position: relative;
+  overflow: hidden;
 }
 
-.commission-card img {
-
-width:100%;
-
-height:240px;
-
-object-fit:cover;
-
-border-radius:16px;
-
+.commission-card h3 {
+  margin-bottom: 8px;
 }
 
 .price {
-
-font-size:2.2rem;
-
-font-weight:800;
-
-margin:12px 0;
-
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--accent-mint);
 }
 
-.order-button {
-
-display:inline-block;
-
-padding:12px 20px;
-
-border-radius:999px;
-
-text-decoration:none;
-
+.tag {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 0.75rem;
+  margin-top: 8px;
 }
 
-.gallery-grid {
+/* =========================
+   MOODBOARD GRID (4 IMAGE BLOCK)
+========================= */
 
-display:grid;
+.moodboard {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
 
-grid-template-columns:
-repeat(auto-fit,minmax(160px,1fr));
+.moodboard img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: 0.3s ease;
+}
 
-gap:16px;
+.moodboard img:hover {
+  transform: scale(1.05);
+}
 
+/* =========================
+   STAR HUB SPECIAL EFFECTS
+========================= */
+
+.glow {
+  box-shadow:
+    0 0 10px rgba(107, 214, 255, 0.3),
+    0 0 30px rgba(255, 107, 214, 0.2);
+}
+
+.floating {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+/* =========================
+   INPUTS (NOTION STYLE)
+========================= */
+
+input, textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.2);
+  color: var(--text);
+  outline: none;
+}
+
+input:focus, textarea:focus {
+  border-color: var(--accent-purple);
+  box-shadow: 0 0 10px rgba(167, 139, 250, 0.25);
+}
+
+/* =========================
+   BADGES / STATUS
+========================= */
+
+.badge {
+  font-size: 0.7rem;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ==================================================
+   LAYOUT SYSTEM (ALL LAYOUT RULES AT THE BOTTOM)
+================================================== */
+
+/* Page wrapper */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+/* Section spacing */
+section {
+  margin-bottom: 32px;
+}
+
+/* Grid helpers */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+/* Centering helpers */
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Stack layout */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .grid-2,
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .navbar {
+    flex-direction: column;
+    gap: 12px;
+  }
 }
