@@ -1,90 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Commissions</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Star Hub Commissions</title>
 
-<link rel="stylesheet" href="style.css?v=1">
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<header class="hero">
-    <h1>Commissions</h1>
-
-    <p>
-        Soft Anime • Chibi • Mascots
-        <br>
-        Anthro • Couples • Reference Sheets
-    </p>
-
-    <a class="order-button" href="#order">
-        Order Here
-    </a>
+<header class="navbar glass">
+  <h2>✨ Star Hub Commissions</h2>
 </header>
 
-<main>
+<section class="container">
 
-<section class="commission-grid" id="commissionGrid">
-</section>
-
-<section class="addons glass-card">
-
-<h2>Add-ons</h2>
-
-<ul>
-<li>Extra Character +$15</li>
-<li>Detailed Outfit +$10</li>
-<li>Commercial Use +$25</li>
-<li>Rush Order +$20</li>
-<li>Extra Expression +$5</li>
-
-</ul>
+  <div class="glass-strong center stack" style="padding:40px; text-align:center;">
+    <h1 class="glow">Live Commission Queue</h1>
+    <p>Powered by Notion + Star Hub Worker</p>
+  </div>
 
 </section>
 
-<section class="examples">
+<section class="container">
 
-<h2>Recent Examples</h2>
+  <h2>Available Commissions</h2>
 
-<div class="gallery-grid" id="galleryGrid"></div>
-
-</section>
-
-<section class="glass-card">
-
-<h2>Terms of Service</h2>
-
-<ul>
-
-<li>Payment upfront</li>
-<li>No refunds after sketch approval</li>
-<li>Personal use unless discussed</li>
-<li>1–4 week turnaround</li>
-<li>Credit appreciated</li>
-
-</ul>
+  <div id="commissions" class="commission-grid grid-3"></div>
 
 </section>
 
-<section id="order" class="glass-card">
+<script>
+const API = "YOUR_WORKER_URL_HERE/api/commissions";
 
-<h2>Ready to Order?</h2>
+async function loadCommissions() {
+  const res = await fetch(API);
+  const data = await res.json();
 
-<a
-class="order-button"
-href="https://yourformlink.com"
-target="_blank"
->
-Commission Form
-</a>
+  const container = document.getElementById("commissions");
+  container.innerHTML = "";
 
-</section>
+  data.forEach(item => {
+    const card = document.createElement("div");
+    card.className = "commission-card card floating";
 
-</main>
+    card.innerHTML = `
+      <h3>${item.name}</h3>
+      <span class="price">$${item.price}</span>
 
-<script src="script.js?v=1"></script>
+      <div class="stack">
+        <span class="tag">${item.type}</span>
+        <span class="tag">${item.status}</span>
+      </div>
+
+      <p>${item.description}</p>
+
+      <button class="btn btn-primary">Request</button>
+    `;
+
+    container.appendChild(card);
+  });
+}
+
+loadCommissions();
+</script>
 
 </body>
 </html>
