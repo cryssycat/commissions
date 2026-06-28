@@ -12,12 +12,19 @@ throw new Error(
 );
 
 
-const res = await fetch(API_URL);
-const data = await res.json();
+async function loadCommissions() {
+  try {
+    const res = await fetch("https://commissions.crysthigpen.workers.dev/commissions");
+    const data = await res.json();
 
-const safeData = Array.isArray(data) ? data : [];
+    const safeData = Array.isArray(data) ? data : [];
 
-renderCommissions(safeData);
+    renderCommissions(safeData);
+  } catch (err) {
+    console.error("Commission loading error:", err);
+    renderCommissions([]);
+  }
+}
 
 renderCommissions(Array.isArray(data) ? data : []);
   
