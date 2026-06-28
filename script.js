@@ -12,11 +12,13 @@ throw new Error(
 `Worker returned ${response.status}`
 );
 
-const data =
-await response.json();
 
-  const res = await fetch(API_URL);
+const res = await fetch(API_URL);
 const data = await res.json();
+
+const safeData = Array.isArray(data) ? data : [];
+
+renderCommissions(safeData);
 
 renderCommissions(Array.isArray(data) ? data : []);
   
