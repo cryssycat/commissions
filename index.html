@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Star Hub Commissions</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="navbar glass">
+  <h2>✨ Star Hub Commissions</h2>
+</header>
+
+<section class="container">
+
+  <div class="glass-strong center stack" style="padding:40px; text-align:center;">
+    <h1 class="glow">Live Commission Queue</h1>
+    <p>Powered by Notion + Worker API</p>
+  </div>
+
+</section>
+
+<section class="container">
+  <h2>Commissions</h2>
+  <div id="commissions" class="commission-grid grid-3"></div>
+</section>
+
+<script>
+const API = "YOUR_WORKER_URL/api/commissions";
+
+async function load() {
+  const container = document.getElementById("commissions");
+
+  try {
+    const res = await fetch(API);
+    const data = await res.json();
+
+    if (!Array.isArray(data)) {
+      container.innerHTML = "<p>Error loading commissions.</p>";
+      return;
+    }
+
+    container.innerHTML = "";
+
+    data.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "commission-card card floating";
+
+      card.innerHTML = `
+        <h3>${item.name || "Untitled"}</h3>
+        <span class="price">$${item.price || "—"}</span>
+        <div class="stack">
+          <span class="tag">${item.type || "General"}</span>
+          <span class="tag">${item.status || "Open"}</span>
+        </div>
+        <p>${item.description || ""}</p>
+      `;
+
+      container.appendChild(card);
+    });
+
+  } catch (e) {
+    container.innerHTML = "<p>Failed to load data.</p>";
+  }
+}
+
+load();
+</script>
+
+</body>
+</html>
