@@ -1,143 +1,83 @@
-const API_URL = "https://commissions.crysthigpen.workers.dev/commissions";
+// =============================
+// CONFIG
+// =============================
+const ENDPOINT = "https://commissions.crysthigpen.workers.dev/commissions";
 
+// =============================
+// INIT
+// =============================
+document.addEventListener("DOMContentLoaded", () => {
+  loadCommissions();
+});
+
+// =============================
+// LOAD COMMISSIONS
+// =============================
 async function loadCommissions() {
+  const container = document.getElementById("commission-container");
 
-try {
+  if (!container) {
+    console.error("Missing #commission-container in HTML");
+    return;
+  }
 
-const response = await fetch(API);
+  container.innerHTML = "<p>Loading commissions...</p>";
 
-if (!response.ok)
-throw new Error(
-`Worker returned ${response.status}`
-);
-
-
-async function loadCommissions() {
   try {
-    const res = await fetch("https://commissions.crysthigpen.workers.dev/commissions");
+    const res = await fetch(ENDPOINT);
     const data = await res.json();
 
-    const safeData = Array.isArray(data) ? data : [];
+    // 🛡 Always force array safety
+    const commissions = Array.isArray(data) ? data : [];
 
-    renderCommissions(safeData);
+    renderCommissions(commissions, container);
+
   } catch (err) {
     console.error("Commission loading error:", err);
-    renderCommissions([]);
+    container.innerHTML = "<p>Failed to load commissions.</p>";
   }
 }
 
-renderCommissions(Array.isArray(data) ? data : []);
-  
-renderCommissions(data);
+// =============================
+// RENDER COMMISSIONS
+// =============================
+function renderCommissions(data, container) {
+  // 🛡 extra safety layer
+  if (!Array.isArray(data)) {
+    console.warn("renderCommissions expected array but got:", data);
+    data = [];
+  }
 
-}
-catch(err){
+  container.innerHTML = "";
 
-console.error(
-"Commission loading error:",
-err
-);
+  if (data.length === 0) {
+    container.innerHTML = "<p>No commissions available.</p>";
+    return;
+  }
 
-}
+  data.forEach((item) => {
+    const card = document.createElement("div");
+    card.className = "commission-card";
 
-}
+    card.innerHTML = `
+      <h3>${escapeHTML(item.title || "Untitled")}</h3>
+      <p>${escapeHTML(item.description || "")}</p>
+      <span class="price">${escapeHTML(item.price || "")}</span>
+      <span class="status">${escapeHTML(item.status || "open")}</span>
+    `;
 
-function renderCommissions(data){
-
-const container =
-document.getElementById(
-"commissionSections"
-);
-
-container.innerHTML = "";
-
-const categories = {};
-
-data.forEach(item => {
-
-const cat =
-item.category || "Other";
-
-if(!categories[cat])
-categories[cat] = [];
-
-categories[cat].push(item);
-
-});
-
-Object.keys(categories)
-.sort()
-.forEach(category => {
-
-const section =
-document.createElement("section");
-
-section.className =
-"category-section";
-
-section.innerHTML =
-`<h2>${category}</h2>`;
-
-const grid =
-document.createElement("div");
-
-grid.className =
-"commission-grid";
-
-categories[category]
-.sort((a,b)=>
-(a.sort||999)-
-(b.sort||999)
-)
-.forEach(item => {
-
-const card =
-document.createElement("article");
-
-card.className =
-"commission-card glass";
-
-card.innerHTML = `
-<img
-src="${item.image}"
-alt="${item.name}"
->
-
-<div class="card-content">
-
-<h3>${item.name}</h3>
-
-<div class="price">
-${item.price}
-</div>
-
-<p>
-${item.description}
-</p>
-
-<a
-href="${
-item.orderLink || "#"
-}"
-target="_blank"
-class="order-button"
->
-Order
-</a>
-
-</div>
-`;
-
-grid.appendChild(card);
-
-});
-
-section.appendChild(grid);
-
-container.appendChild(section);
-
-});
-
+    container.appendChild(card);
+  });
 }
 
-loadCommissions();
+// =============================
+// SAFE HTML (prevents broken rendering)
+// =============================
+function escapeHTML(str) {
+  return String(str)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
