@@ -1,5 +1,4 @@
-const API =
-"https://commissions.crysthigpen.workers.dev/";
+const API_URL = "https://commissions.crysthigpen.workers.dev/commissions";
 
 async function loadCommissions() {
 
