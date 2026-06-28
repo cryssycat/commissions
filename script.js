@@ -15,6 +15,11 @@ throw new Error(
 const data =
 await response.json();
 
+  const res = await fetch(API_URL);
+const data = await res.json();
+
+renderCommissions(Array.isArray(data) ? data : []);
+  
 renderCommissions(data);
 
 }
