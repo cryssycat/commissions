@@ -365,3 +365,34 @@ select option {
   background: #2a2340;
   color: white;
 }
+
+
+.tos-card {
+
+    padding: 35px;
+
+    margin: 40px auto;
+
+}
+
+.tos-card h2 {
+
+    margin-top: 0;
+
+}
+
+.tos-list {
+
+    margin: 20px 0 0;
+
+    padding-left: 22px;
+
+    line-height: 1.8;
+
+}
+
+.tos-list li {
+
+    margin-bottom: 10px;
+
+}
