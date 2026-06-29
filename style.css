@@ -340,3 +340,22 @@ margin-top:20px;
 
 
 }
+
+
+input,
+textarea,
+select {
+
+  padding: 15px;
+  border-radius: 15px;
+
+  border: 1px solid var(--card-border);
+
+  background: rgba(255, 255, 255, 0.10);
+
+  color: white;
+
+  font-size: 14px;
+
+  backdrop-filter: blur(10px);
+}
