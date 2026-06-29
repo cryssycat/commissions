@@ -1,350 +1,86 @@
-/* =========================
-   BASE BACKGROUND (SAFE)
-========================= */
 body {
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  margin: 0;
+  font-family: system-ui;
   background: radial-gradient(circle at top, #141420, #0b0b10);
-  color: #fff;
+  color: white;
 }
 
-/* =========================
-   OPTIONAL PAGE WRAPPER
-   (DOES NOT FORCE GRID)
-========================= */
-#commission-container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 40px 20px;
-
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 18px;
-}
-
-/* =========================
-   GLASS CARD CORE (STAR HUB STYLE)
-========================= */
-.commission-card {
-  position: relative;
-  border-radius: 18px;
-  overflow: hidden;
-
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-
-  border: 1px solid rgba(255, 255, 255, 0.12);
-
-  box-shadow:
-    0 8px 30px rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
-
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.commission-card:hover {
-  transform: translateY(-6px);
-  box-shadow:
-    0 14px 40px rgba(0, 0, 0, 0.55),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
-
-/* =========================
-   IMAGE (SOFT OVERLAY STYLE)
-========================= */
-.commission-img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  display: block;
-
-  filter: saturate(1.1) contrast(1.05);
-}
-
-.commission-img.placeholder {
-  height: 180px;
-  background: linear-gradient(135deg, #1b1b2a, #101018);
-}
-
-/* =========================
-   CONTENT
-========================= */
-.commission-content {
-  padding: 14px 16px;
-}
-
-.commission-content h3 {
-  font-size: 1.1rem;
-  margin-bottom: 6px;
-}
-
-.commission-content p {
-  font-size: 0.9rem;
-  opacity: 0.75;
-  margin-bottom: 12px;
-}
-
-/* =========================
-   META ROW
-========================= */
-.commission-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* price glow */
-.price {
-  font-weight: 600;
-  color: #fff;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.15);
-}
-
-/* =========================
-   STATUS PILLS (GLOW STYLE)
-========================= */
-.status {
-  font-size: 0.75rem;
-  padding: 4px 10px;
-  border-radius: 999px;
-
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-
-/* status colors */
-.status-open {
-  background: rgba(0, 255, 160, 0.12);
-  color: #5dffbf;
-  border-color: rgba(0, 255, 160, 0.25);
-}
-
-.status-limited {
-  background: rgba(255, 200, 0, 0.12);
-  color: #ffd36b;
-  border-color: rgba(255, 200, 0, 0.25);
-}
-
-.status-closed {
-  background: rgba(255, 80, 80, 0.12);
-  color: #ff7a7a;
-  border-color: rgba(255, 80, 80, 0.25);
-}
-
-/* =========================
-   STATES
-========================= */
-.loading,
-.empty,
-.error {
-  grid-column: 1 / -1;
-  text-align: center;
-  opacity: 0.6;
-  padding: 40px 0;
-}
-
-
-/* =========================
-   PAGE HEADER (GLASS STYLE)
-========================= */
-.page-header {
-  max-width: 1100px;
-  margin: 40px auto 20px auto;
-  padding: 20px 24px;
-
-  text-align: center;
-
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 16px;
-
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-
-  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-}
-
-/* title */
-.page-header h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  letter-spacing: 1px;
-
-  background: linear-gradient(90deg, #ff4fd8, #7c4dff, #4dd0ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* subtitle */
-.page-header p {
-  margin-top: 8px;
-  font-size: 0.95rem;
-  opacity: 0.7;
-}
-
-
-/* =========================
-   PAGE WRAPPER
-========================= */
 .page-wrapper {
   max-width: 1100px;
-  margin: 0 auto;
+  margin: auto;
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 18px;
 }
 
-/* =========================
-   HEADER GLASS
-========================= */
+/* HEADER */
 .page-header {
   max-width: 1100px;
-  margin: 30px auto 10px auto;
-  padding: 30px 20px;
-
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 18px;
-
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-
+  margin: 30px auto 10px;
+  padding: 25px;
   text-align: center;
 
-  box-shadow: 0 12px 35px rgba(0,0,0,0.35);
-}
-
-/* header inner spacing */
-.header-inner h1 {
-  font-size: 2.2rem;
-  margin-bottom: 6px;
-
-  background: linear-gradient(90deg, #ff4fd8, #7c4dff, #4dd0ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.header-inner p {
-  opacity: 0.7;
-  margin-bottom: 14px;
-}
-
-/* button */
-.hero-button {
-  display: inline-block;
-  padding: 10px 18px;
-  border-radius: 999px;
-
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15);
-
-  color: white;
-  text-decoration: none;
-
-  transition: 0.2s ease;
-}
-
-.hero-button:hover {
-  transform: translateY(-2px);
-  background: rgba(255,255,255,0.12);
-}
-
-/* =========================
-   SECTION CARDS (GLASS UNIFORM)
-========================= */
-.section-card {
-  padding: 18px;
-
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
   border-radius: 16px;
-
   backdrop-filter: blur(14px);
 }
 
-/* =========================
-   ADD-ONS GRID
-========================= */
-.addons-grid {
+.hero-button {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  color: white;
+  text-decoration: none;
+}
+
+/* CARDS */
+.glass,
+.section-card,
+.commission-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 16px;
+  padding: 16px;
+  backdrop-filter: blur(14px);
+}
+
+#commission-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 10px;
-  margin-top: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
 }
 
-.addons-grid div {
-  background: rgba(255,255,255,0.06);
-  padding: 10px;
+.commission-img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
   border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.08);
-
-  display: flex;
-  justify-content: space-between;
 }
 
-/* =========================
-   TOS
-========================= */
-.tos {
-  margin-top: 10px;
-  padding-left: 18px;
-  opacity: 0.75;
-}
-
-.tos li {
-  margin-bottom: 6px;
-}
-
-
+/* FORM */
 .queue-form {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-top: 10px;
 }
 
 .queue-form input,
 .queue-form textarea {
-  padding: 10px 12px;
+  padding: 10px;
   border-radius: 10px;
-
-  border: 1px solid rgba(255,255,255,0.12);
   background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
   color: white;
-
-  outline: none;
-
-  backdrop-filter: blur(12px);
-}
-
-.queue-form textarea {
-  min-height: 110px;
-  resize: vertical;
 }
 
 .queue-form button {
-  padding: 10px 14px;
+  padding: 10px;
   border-radius: 999px;
-
-  border: 1px solid rgba(255,255,255,0.15);
   background: rgba(255,255,255,0.08);
   color: white;
-
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.queue-form button:hover {
-  transform: translateY(-2px);
-  background: rgba(255,255,255,0.12);
-}
-
-#formStatus {
-  margin-top: 8px;
-  font-size: 0.9rem;
-  opacity: 0.7;
+  border: none;
 }
