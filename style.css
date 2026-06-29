@@ -298,3 +298,53 @@ body {
 .tos li {
   margin-bottom: 6px;
 }
+
+
+.queue-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.queue-form input,
+.queue-form textarea {
+  padding: 10px 12px;
+  border-radius: 10px;
+
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.05);
+  color: white;
+
+  outline: none;
+
+  backdrop-filter: blur(12px);
+}
+
+.queue-form textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.queue-form button {
+  padding: 10px 14px;
+  border-radius: 999px;
+
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.08);
+  color: white;
+
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.queue-form button:hover {
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.12);
+}
+
+#formStatus {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
