@@ -1,64 +1,15 @@
-<header class="page-header">
-  <div class="header-inner">
-    <h1>Commissions</h1>
-    <p>Open slots • Prices vary • Contact for inquiries</p>
+<section id="commission-container"></section>
 
-    <a href="#queueForm" class="hero-button">Order Here</a>
-  </div>
-</header>
+<section class="glass">
+  <h2>Join Queue</h2>
 
-<main class="page-wrapper">
+  <form id="queueForm">
+    <input name="name" placeholder="Name" required>
+    <input name="type" placeholder="Commission Type" required>
+    <textarea name="details" placeholder="Details" required></textarea>
+    <input name="email" placeholder="Email (optional)">
+    <button type="submit">Submit</button>
+  </form>
 
-  <!-- COMMISSIONS -->
-  <section id="commission-container"></section>
-
-  <!-- FORM -->
-  <section class="glass section-card">
-
-    <h2>Join the Queue</h2>
-
-    <form id="queueForm" class="queue-form">
-
-      <input type="text" name="name" placeholder="Name" required />
-
-      <input type="text" name="type" placeholder="Commission Type" required />
-
-      <textarea name="details" placeholder="Describe your request..." required></textarea>
-
-      <input type="email" name="email" placeholder="Email (optional)" />
-
-      <button type="submit">Submit</button>
-
-    </form>
-
-    <p id="formStatus"></p>
-
-  </section>
-
-  <!-- ADD-ONS -->
-  <section class="glass section-card">
-    <h2>Add-Ons</h2>
-
-    <div class="addons-grid">
-      <div>Extra Character <span>+$15</span></div>
-      <div>Detailed Outfit <span>+$10</span></div>
-      <div>Commercial Use <span>+$25</span></div>
-      <div>Rush Order <span>+$20</span></div>
-      <div>Extra Expression <span>+$5</span></div>
-    </div>
-  </section>
-
-  <!-- TOS -->
-  <section class="glass section-card">
-    <h2>Terms of Service</h2>
-
-    <ul class="tos">
-      <li>Payment upfront.</li>
-      <li>No refunds after sketch approval.</li>
-      <li>Personal use unless discussed.</li>
-      <li>Turnaround varies.</li>
-      <li>Credit appreciated.</li>
-    </ul>
-  </section>
-<script src="script.js"></script>
-</main>
+  <p id="status"></p>
+</section>
