@@ -48,6 +48,7 @@ async function loadCommissions() {
       const details = document.createElement("p");
       details.textContent = c.details || "";
 
+      const btn = document.createElement("button");
       content.appendChild(title);
       content.appendChild(price);
       content.appendChild(details);
