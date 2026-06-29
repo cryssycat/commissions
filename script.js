@@ -90,3 +90,43 @@ function escapeHTML(str) {
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
 }
+
+// =============================
+// FORM
+// =============================
+
+const queueForm = document.getElementById("queueForm");
+const formStatus = document.getElementById("formStatus");
+
+if (queueForm) {
+  queueForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    formStatus.textContent = "Submitting...";
+
+    const data = Object.fromEntries(new FormData(queueForm));
+
+    try {
+      const res = await fetch("https://commissions.crysthigpen.workers.dev/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await res.json();
+
+      if (result.success) {
+        formStatus.textContent = "Submitted successfully!";
+        queueForm.reset();
+      } else {
+        formStatus.textContent = "Submission failed.";
+      }
+
+    } catch (err) {
+      console.error(err);
+      formStatus.textContent = "Error submitting form.";
+    }
+  });
+}
