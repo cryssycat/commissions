@@ -1,27 +1,261 @@
-<header class="page-header">
-  <h1>Commissions</h1>
-  <p>Open slots • Prices vary • Contact for inquiries</p>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>StarHub Commissions</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+
+<header class="hero glass">
+
+<h1>
+✨ StarHub Commissions
+</h1>
+
+<p>
+Bring your character dreams to life.
+</p>
+
 </header>
 
-<main class="page-wrapper">
 
-  <!-- COMMISSIONS RENDER HERE -->
-  <section id="commission-container"></section>
 
-  <!-- FORM -->
-  <section class="glass section-card">
+<section>
 
-    <h2>Join Queue</h2>
+<h2>
+Available Commissions
+</h2>
 
-    <form id="queueForm">
-      <input name="name" placeholder="Name" required>
-      <input name="type" placeholder="Commission Type" required>
-      <textarea name="details" placeholder="Details" required></textarea>
-      <input name="email" placeholder="Email (optional)">
-      <button type="submit">Submit</button>
-    </form>
 
-    <p id="status"></p>
-  </section>
+<div class="commission-grid">
 
-</main>
+
+<div class="commission-card glass">
+
+
+<img src="images/chibi.png">
+
+
+<div class="content">
+
+<h3>
+Chibi Character
+</h3>
+
+
+<h4>
+$25
+</h4>
+
+
+<p>
+Cute chibi artwork.
+Includes one character,
+simple shading,
+and transparent PNG.
+</p>
+
+
+<button>
+Request
+</button>
+
+
+</div>
+
+
+</div>
+
+
+
+
+<div class="commission-card glass">
+
+
+<img src="images/reference.png">
+
+
+<div class="content">
+
+<h3>
+Character Illustration
+</h3>
+
+
+<h4>
+$50
+</h4>
+
+
+<p>
+Full character artwork
+with custom details.
+</p>
+
+
+<button>
+Request
+</button>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+</section>
+
+
+
+
+
+<section class="glass fees-section">
+
+
+<h2>
+Additional Fees
+</h2>
+
+
+<div class="fees">
+
+
+<span>
++ Extra Character $10
+</span>
+
+
+<span>
++ Background $15
+</span>
+
+
+<span>
++ Detailed Outfit $10
+</span>
+
+
+<span>
++ Commercial Use
+</span>
+
+
+<span>
++ Rush Order $20
+</span>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+<section class="glass form-card">
+
+
+<h2>
+Commission Request
+</h2>
+
+
+<form id="commissionForm">
+
+
+<input
+name="name"
+placeholder="Your Name"
+required
+>
+
+
+
+<input
+name="email"
+placeholder="Email"
+required
+>
+
+
+
+
+<select name="commission">
+
+
+<option>
+Chibi Character
+</option>
+
+
+<option>
+Character Illustration
+</option>
+
+
+</select>
+
+
+
+
+
+<textarea
+name="details"
+placeholder="Tell me about your idea"
+required>
+</textarea>
+
+
+
+
+
+<input
+name="reference"
+placeholder="Reference link (optional)"
+>
+
+
+
+
+<button type="submit">
+
+Join Queue
+
+</button>
+
+
+
+</form>
+
+
+<p id="message"></p>
+
+
+</section>
+
+
+
+
+
+<script src="script.js"></script>
+
+
+</body>
+
+</html>
