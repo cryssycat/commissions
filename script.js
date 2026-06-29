@@ -1,85 +1,82 @@
-const API = "https://commissions.crysthigpen.workers.dev";
+const API =
+"https://YOUR-WORKER.workers.dev";
 
-document.addEventListener("DOMContentLoaded", () => {
-  loadCommissions();
-  initForm();
-});
 
-const commissions = [
-  {
-    title: "Bust Icon",
-    description: "Clean bust-up character icon",
-    price: "$25",
-    status: "Open",
-    image: ""
-  },
-  {
-    title: "Half Body",
-    description: "Waist-up illustration with detail",
-    price: "$45",
-    status: "Open",
-    image: ""
-  },
-  {
-    title: "Full Body",
-    description: "Full character illustration",
-    price: "$70",
-    status: "Limited",
-    image: ""
-  }
-];
 
-document.addEventListener("DOMContentLoaded", () => {
-  renderCommissions();
-  initForm();
-});
+const form =
+document.querySelector("#commissionForm");
 
-function renderCommissions() {
-  const container = document.getElementById("commission-container");
 
-  container.innerHTML = commissions.map(c => `
-    <div class="commission-card">
 
-      ${c.image ? `<img src="${c.image}" />` : ""}
+const message =
+document.querySelector("#message");
 
-      <h3>${c.title}</h3>
-      <p>${c.description}</p>
 
-      <div class="meta">
-        <span>${c.price}</span>
-        <span>${c.status}</span>
-      </div>
 
-    </div>
-  `).join("");
+
+
+form.addEventListener(
+"submit",
+async(e)=>{
+
+
+e.preventDefault();
+
+
+
+const data =
+Object.fromEntries(
+new FormData(form)
+);
+
+
+
+
+try {
+
+
+
+await fetch(
+API,
+{
+
+method:"POST",
+
+headers:
+{
+"Content-Type":
+"application/json"
+},
+
+body:
+JSON.stringify(data)
+
 }
-function initForm() {
-  const form = document.getElementById("queueForm");
-  const status = document.getElementById("status");
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+);
 
-    status.textContent = "Submitting...";
 
-    const data = Object.fromEntries(new FormData(form));
 
-    const res = await fetch("https://commissions.crysthigpen.workers.dev/submit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data)
-    });
+message.innerText =
+"✨ Added to commission queue!";
 
-    const result = await res.json();
 
-    if (result.success) {
-      status.textContent = "Submitted!";
-      form.reset();
-    } else {
-      status.textContent = "Failed.";
-      console.log(result);
-    }
-  });
+
+form.reset();
+
+
+
 }
+
+catch(err){
+
+
+message.innerText =
+"Something went wrong.";
+
+
+}
+
+
+
+});
