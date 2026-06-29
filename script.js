@@ -5,23 +5,54 @@ document.addEventListener("DOMContentLoaded", () => {
   initForm();
 });
 
-async function loadCommissions() {
-  const el = document.getElementById("commission-container");
+const commissions = [
+  {
+    title: "Bust Icon",
+    description: "Clean bust-up character icon",
+    price: "$25",
+    status: "Open",
+    image: ""
+  },
+  {
+    title: "Half Body",
+    description: "Waist-up illustration with detail",
+    price: "$45",
+    status: "Open",
+    image: ""
+  },
+  {
+    title: "Full Body",
+    description: "Full character illustration",
+    price: "$70",
+    status: "Limited",
+    image: ""
+  }
+];
 
-  const res = await fetch(`${API}/commissions`);
-  const data = await res.json();
+document.addEventListener("DOMContentLoaded", () => {
+  renderCommissions();
+  initForm();
+});
 
-  el.innerHTML = data.map(c => `
-    <div class="card">
-      ${c.image ? `<img src="${c.image}">` : ""}
-      <h3>${c.name}</h3>
+function renderCommissions() {
+  const container = document.getElementById("commission-container");
+
+  container.innerHTML = commissions.map(c => `
+    <div class="commission-card">
+
+      ${c.image ? `<img src="${c.image}" />` : ""}
+
+      <h3>${c.title}</h3>
       <p>${c.description}</p>
-      <span>${c.price}</span>
-      <small>${c.status}</small>
+
+      <div class="meta">
+        <span>${c.price}</span>
+        <span>${c.status}</span>
+      </div>
+
     </div>
   `).join("");
 }
-
 function initForm() {
   const form = document.getElementById("queueForm");
   const status = document.getElementById("status");
@@ -33,9 +64,11 @@ function initForm() {
 
     const data = Object.fromEntries(new FormData(form));
 
-    const res = await fetch(`${API}/submit`, {
+    const res = await fetch("https://commissions.crysthigpen.workers.dev/submit", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify(data)
     });
 
@@ -45,7 +78,7 @@ function initForm() {
       status.textContent = "Submitted!";
       form.reset();
     } else {
-      status.textContent = "Failed to submit.";
+      status.textContent = "Failed.";
       console.log(result);
     }
   });
