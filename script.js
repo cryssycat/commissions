@@ -6,12 +6,10 @@ const ENDPOINT = "https://commissions.crysthigpen.workers.dev/commissions";
 // =============================
 // INIT
 // =============================
-document.addEventListener("DOMContentLoaded", () => {
-  loadCommissions();
-});
+document.addEventListener("DOMContentLoaded", loadCommissions);
 
 // =============================
-// LOAD COMMISSIONS
+// LOAD DATA
 // =============================
 async function loadCommissions() {
   const container = document.getElementById("commission-container");
@@ -21,57 +19,68 @@ async function loadCommissions() {
     return;
   }
 
-  container.innerHTML = "<p>Loading commissions...</p>";
+  container.innerHTML = "<p class='loading'>Loading commissions...</p>";
 
   try {
     const res = await fetch(ENDPOINT);
     const data = await res.json();
 
-    // 🛡 Always force array safety
     const commissions = Array.isArray(data) ? data : [];
 
     renderCommissions(commissions, container);
 
   } catch (err) {
     console.error("Commission loading error:", err);
-    container.innerHTML = "<p>Failed to load commissions.</p>";
+    container.innerHTML = "<p class='error'>Failed to load commissions.</p>";
   }
 }
 
 // =============================
-// RENDER COMMISSIONS
+// RENDER CARDS
 // =============================
-function renderCommissions(data, container) {
-  // 🛡 extra safety layer
-  if (!Array.isArray(data)) {
-    console.warn("renderCommissions expected array but got:", data);
-    data = [];
-  }
+function renderCommissions(items, container) {
+  if (!Array.isArray(items)) items = [];
 
   container.innerHTML = "";
 
-  if (data.length === 0) {
-    container.innerHTML = "<p>No commissions available.</p>";
+  if (items.length === 0) {
+    container.innerHTML = "<p class='empty'>No commissions available.</p>";
     return;
   }
 
-  data.forEach((item) => {
+  const fragment = document.createDocumentFragment();
+
+  items.forEach((item) => {
     const card = document.createElement("div");
     card.className = "commission-card";
 
+    const img = item.image
+      ? `<img class="commission-img" src="${escapeHTML(item.image)}" alt="${escapeHTML(item.title)}" loading="lazy">`
+      : `<div class="commission-img placeholder"></div>`;
+
     card.innerHTML = `
-      <h3>${escapeHTML(item.title || "Untitled")}</h3>
-      <p>${escapeHTML(item.description || "")}</p>
-      <span class="price">${escapeHTML(item.price || "")}</span>
-      <span class="status">${escapeHTML(item.status || "open")}</span>
+      ${img}
+      <div class="commission-content">
+        <h3>${escapeHTML(item.title || "Untitled")}</h3>
+        <p>${escapeHTML(item.description || "")}</p>
+        
+        <div class="commission-meta">
+          <span class="price">${escapeHTML(item.price || "")}</span>
+          <span class="status status-${escapeHTML(item.status || "open")}">
+            ${escapeHTML(item.status || "open")}
+          </span>
+        </div>
+      </div>
     `;
 
-    container.appendChild(card);
+    fragment.appendChild(card);
   });
+
+  container.appendChild(fragment);
 }
 
 // =============================
-// SAFE HTML (prevents broken rendering)
+// HTML ESCAPE SAFETY
 // =============================
 function escapeHTML(str) {
   return String(str)
