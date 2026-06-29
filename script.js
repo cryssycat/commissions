@@ -139,3 +139,62 @@ export default {
     }
   },
 };
+
+
+const ENDPOINT = "https://commissions.crysthigpen.workers.dev";
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadCommissions();
+  initForm();
+});
+
+async function loadCommissions() {
+  const container = document.getElementById("commission-container");
+
+  const res = await fetch(`${ENDPOINT}/commissions`);
+  const data = await res.json();
+
+  if (!Array.isArray(data)) return;
+
+  container.innerHTML = data.map(item => `
+    <div class="commission-card">
+      ${item.image ? `<img src="${item.image}" class="commission-img">` : ""}
+      <div class="commission-content">
+        <h3>${item.title}</h3>
+        <p>${item.description}</p>
+        <div class="commission-meta">
+          <span class="price">${item.price}</span>
+          <span class="status status-${item.status}">${item.status}</span>
+        </div>
+      </div>
+    </div>
+  `).join("");
+}
+
+function initForm() {
+  const form = document.getElementById("queueForm");
+  const status = document.getElementById("formStatus");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    status.textContent = "Submitting...";
+
+    const data = Object.fromEntries(new FormData(form));
+
+    const res = await fetch(`${ENDPOINT}/submit`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    const result = await res.json();
+
+    if (result.success) {
+      status.textContent = "Submitted successfully!";
+      form.reset();
+    } else {
+      status.textContent = "Submission failed.";
+    }
+  });
+}
