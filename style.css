@@ -359,3 +359,9 @@ select {
 
   backdrop-filter: blur(10px);
 }
+
+
+select option {
+  background: #2a2340;
+  color: white;
+}
