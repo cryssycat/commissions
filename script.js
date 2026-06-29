@@ -1,200 +1,134 @@
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "https://starsundae.pages.dev",
-  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
-};
-
-function json(data, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: {
-      "Content-Type": "application/json",
-      ...corsHeaders,
-    },
-  });
-}
-
-export default {
-  async fetch(request, env) {
-    const url = new URL(request.url);
-
-    // =========================
-    // CORS
-    // =========================
-    if (request.method === "OPTIONS") {
-      return new Response(null, { status: 204, headers: corsHeaders });
-    }
-
-    try {
-
-      // =========================
-      // HEALTH
-      // =========================
-      if (url.pathname === "/health") {
-        return json({ ok: true });
-      }
-
-      // =========================
-      // GET COMMISSIONS
-      // =========================
-      if (url.pathname === "/commissions" && request.method === "GET") {
-
-        const res = await fetch(
-          `https://api.notion.com/v1/databases/${env.NOTION_DB_ID}/query`,
-          {
-            method: "POST",
-            headers: {
-              "Authorization": `Bearer ${env.NOTION_TOKEN}`,
-              "Notion-Version": "2022-06-28",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ page_size: 100 }),
-          }
-        );
-
-        const data = await res.json();
-
-        const items = (data.results || []).map((page) => {
-          const p = page.properties || {};
-
-          return {
-            id: page.id,
-            title: p.Title?.title?.[0]?.plain_text || "Untitled",
-            description: p.Description?.rich_text?.[0]?.plain_text || "",
-            price: p.Price?.rich_text?.[0]?.plain_text || "",
-            status: p.Status?.select?.name || "open",
-
-            image:
-              p.Image?.files?.[0]?.file?.url ||
-              p.Image?.files?.[0]?.external?.url ||
-              p.Image?.url ||
-              "",
-          };
-        });
-
-        return json(items);
-      }
-
-      // =========================
-      // SUBMIT FORM → QUEUE DB
-      // =========================
-      if (url.pathname === "/submit" && request.method === "POST") {
-
-        const body = await request.json();
-
-        const notion = await fetch("https://api.notion.com/v1/pages", {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${env.NOTION_TOKEN}`,
-            "Notion-Version": "2022-06-28",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            parent: {
-              database_id: env.NOTION_QUEUE_DB_ID,
-            },
-            properties: {
-              Name: {
-                title: [
-                  { text: { content: body.name || "Unnamed" } }
-                ]
-              },
-              Type: {
-                rich_text: [
-                  { text: { content: body.type || "" } }
-                ]
-              },
-              Details: {
-                rich_text: [
-                  { text: { content: body.details || "" } }
-                ]
-              },
-              Email: {
-                rich_text: [
-                  { text: { content: body.email || "" } }
-                ]
-              },
-              Status: {
-                select: { name: "Pending" }
-              }
-            }
-          })
-        });
-
-        const result = await notion.json();
-
-        return json({
-          success: true,
-          result
-        });
-      }
-
-      // =========================
-      // 404
-      // =========================
-      return json({ error: "Not found" }, 404);
-
-    } catch (err) {
-      return json({ error: err.message }, 500);
-    }
-  },
-};
-
+/* =========================
+   STARBREW COMMISSIONS UI
+   PRODUCTION CLEAN VERSION
+========================= */
 
 const ENDPOINT = "https://commissions.crysthigpen.workers.dev";
 
+/* =========================
+   INIT
+========================= */
 document.addEventListener("DOMContentLoaded", () => {
-  loadCommissions();
+  initCommissions();
   initForm();
 });
 
-async function loadCommissions() {
+/* =========================
+   COMMISSIONS LOADER
+========================= */
+async function initCommissions() {
   const container = document.getElementById("commission-container");
 
-  const res = await fetch(`${ENDPOINT}/commissions`);
-  const data = await res.json();
+  if (!container) {
+    console.error("Missing #commission-container");
+    return;
+  }
 
-  if (!Array.isArray(data)) return;
+  try {
+    const res = await fetch(`${ENDPOINT}/commissions`);
+    const data = await res.json();
 
-  container.innerHTML = data.map(item => `
-    <div class="commission-card">
-      ${item.image ? `<img src="${item.image}" class="commission-img">` : ""}
-      <div class="commission-content">
-        <h3>${item.title}</h3>
-        <p>${item.description}</p>
-        <div class="commission-meta">
-          <span class="price">${item.price}</span>
-          <span class="status status-${item.status}">${item.status}</span>
-        </div>
-      </div>
-    </div>
-  `).join("");
+    if (!Array.isArray(data)) {
+      console.error("Invalid commissions response:", data);
+      container.innerHTML = "<p>No commissions available.</p>";
+      return;
+    }
+
+    renderCommissions(data, container);
+
+  } catch (err) {
+    console.error("Commission load error:", err);
+    container.innerHTML = "<p class='error'>Failed to load commissions.</p>";
+  }
 }
 
+/* =========================
+   RENDER COMMISSIONS
+========================= */
+function renderCommissions(items, container) {
+  container.innerHTML = "";
+
+  if (!items.length) {
+    container.innerHTML = "<p>No commissions available.</p>";
+    return;
+  }
+
+  const html = items.map(item => `
+    <div class="commission-card">
+
+      ${item.image
+        ? `<img class="commission-img" src="${escapeHTML(item.image)}" alt="">`
+        : ""
+      }
+
+      <div class="commission-content">
+        <h3>${escapeHTML(item.title || "Untitled")}</h3>
+        <p>${escapeHTML(item.description || "")}</p>
+
+        <div class="commission-meta">
+          <span class="price">${escapeHTML(item.price || "")}</span>
+          <span class="status status-${escapeHTML(item.status || "open")}">
+            ${escapeHTML(item.status || "open")}
+          </span>
+        </div>
+      </div>
+
+    </div>
+  `).join("");
+
+  container.innerHTML = html;
+}
+
+/* =========================
+   FORM HANDLER
+========================= */
 function initForm() {
   const form = document.getElementById("queueForm");
   const status = document.getElementById("formStatus");
 
+  if (!form) return;
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    status.textContent = "Submitting...";
+    if (status) status.textContent = "Submitting...";
 
-    const data = Object.fromEntries(new FormData(form));
+    const payload = Object.fromEntries(new FormData(form));
 
-    const res = await fetch(`${ENDPOINT}/submit`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
+    try {
+      const res = await fetch(`${ENDPOINT}/submit`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
 
-    const result = await res.json();
+      const result = await res.json();
 
-    if (result.success) {
-      status.textContent = "Submitted successfully!";
-      form.reset();
-    } else {
-      status.textContent = "Submission failed.";
+      if (result.success) {
+        if (status) status.textContent = "Submitted successfully!";
+        form.reset();
+      } else {
+        if (status) status.textContent = "Submission failed.";
+        console.error("Submit error:", result);
+      }
+
+    } catch (err) {
+      console.error("Submit failed:", err);
+      if (status) status.textContent = "Error submitting form.";
     }
   });
+}
+
+/* =========================
+   SECURITY HELPER
+========================= */
+function escapeHTML(str) {
+  return String(str)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
