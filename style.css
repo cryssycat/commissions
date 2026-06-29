@@ -1,21 +1,15 @@
 /* =========================
-   GLOBAL RESET
+   BASE BACKGROUND (SAFE)
 ========================= */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
   font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  background: #0b0b10;
+  background: radial-gradient(circle at top, #141420, #0b0b10);
   color: #fff;
-  line-height: 1.4;
 }
 
 /* =========================
-   PAGE LAYOUT WRAPPER
+   OPTIONAL PAGE WRAPPER
+   (DOES NOT FORCE GRID)
 ========================= */
 #commission-container {
   max-width: 1100px;
@@ -24,40 +18,52 @@ body {
 
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
+  gap: 18px;
 }
 
 /* =========================
-   COMMISSION CARD
+   GLASS CARD CORE (STAR HUB STYLE)
 ========================= */
 .commission-card {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
+  position: relative;
+  border-radius: 18px;
   overflow: hidden;
 
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
+
+  box-shadow:
+    0 8px 30px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .commission-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  transform: translateY(-6px);
+  box-shadow:
+    0 14px 40px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 /* =========================
-   IMAGE
+   IMAGE (SOFT OVERLAY STYLE)
 ========================= */
 .commission-img {
   width: 100%;
   height: 180px;
   object-fit: cover;
   display: block;
-  background: rgba(255, 255, 255, 0.05);
+
+  filter: saturate(1.1) contrast(1.05);
 }
 
 .commission-img.placeholder {
   height: 180px;
-  background: linear-gradient(135deg, #1a1a22, #101018);
+  background: linear-gradient(135deg, #1b1b2a, #101018);
 }
 
 /* =========================
@@ -74,7 +80,7 @@ body {
 
 .commission-content p {
   font-size: 0.9rem;
-  opacity: 0.8;
+  opacity: 0.75;
   margin-bottom: 12px;
 }
 
@@ -87,36 +93,45 @@ body {
   align-items: center;
 }
 
-/* price */
+/* price glow */
 .price {
   font-weight: 600;
   color: #fff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.15);
 }
 
-/* status pill */
+/* =========================
+   STATUS PILLS (GLOW STYLE)
+========================= */
 .status {
   font-size: 0.75rem;
   padding: 4px 10px;
   border-radius: 999px;
+
   background: rgba(255, 255, 255, 0.08);
-  text-transform: uppercase;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
   letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
-/* optional status colors */
+/* status colors */
 .status-open {
-  background: rgba(0, 255, 140, 0.15);
-  color: #4dffb5;
+  background: rgba(0, 255, 160, 0.12);
+  color: #5dffbf;
+  border-color: rgba(0, 255, 160, 0.25);
 }
 
 .status-limited {
-  background: rgba(255, 180, 0, 0.15);
-  color: #ffcc66;
+  background: rgba(255, 200, 0, 0.12);
+  color: #ffd36b;
+  border-color: rgba(255, 200, 0, 0.25);
 }
 
 .status-closed {
-  background: rgba(255, 80, 80, 0.15);
-  color: #ff6b6b;
+  background: rgba(255, 80, 80, 0.12);
+  color: #ff7a7a;
+  border-color: rgba(255, 80, 80, 0.25);
 }
 
 /* =========================
@@ -127,6 +142,6 @@ body {
 .error {
   grid-column: 1 / -1;
   text-align: center;
-  opacity: 0.7;
+  opacity: 0.6;
   padding: 40px 0;
 }
