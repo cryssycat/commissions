@@ -1,82 +1,81 @@
 const API =
-"https://YOUR-WORKER.workers.dev";
+"https://commissions.crysthigpen.workers.dev/";
 
 
 
-const form =
-document.querySelector("#commissionForm");
-
-
-
-const message =
-document.querySelector("#message");
-
-
-
-
-
-form.addEventListener(
-"submit",
-async(e)=>{
-
-
-e.preventDefault();
-
-
-
-const data =
-Object.fromEntries(
-new FormData(form)
+const grid =
+document.querySelector(
+"#commissionGrid"
 );
 
 
 
-
-try {
-
+async function loadCommissions(){
 
 
-await fetch(
-API,
-{
-
-method:"POST",
-
-headers:
-{
-"Content-Type":
-"application/json"
-},
-
-body:
-JSON.stringify(data)
-
-}
-
-);
+const res =
+await fetch(API);
 
 
 
-message.innerText =
-"✨ Added to commission queue!";
+const commissions =
+await res.json();
 
 
 
-form.reset();
+grid.innerHTML="";
 
 
 
-}
-
-catch(err){
+commissions.forEach(c=>{
 
 
-message.innerText =
-"Something went wrong.";
+grid.innerHTML += `
 
 
-}
+<div class="commission-card glass">
 
+
+<img src="${c.image}">
+
+
+<div class="content">
+
+
+<h2>
+${c.title}
+</h2>
+
+
+<h3>
+${c.price}
+</h3>
+
+
+<p>
+${c.details}
+</p>
+
+
+<button>
+Request
+</button>
+
+
+</div>
+
+
+</div>
+
+
+`;
 
 
 });
+
+
+}
+
+
+
+loadCommissions();
