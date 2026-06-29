@@ -396,3 +396,9 @@ select option {
     margin-bottom: 10px;
 
 }
+
+.commission-card button {
+    display: none;
+}
+
+
