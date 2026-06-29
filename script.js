@@ -1,81 +1,77 @@
-const API =
-"https://commissions.crysthigpen.workers.dev/";
+const API = "https://commissions.crysthigpen.workers.dev/";
 
+const grid = document.querySelector("#commissionGrid");
 
+async function loadCommissions() {
+  try {
+    const res = await fetch(API);
 
-const grid =
-document.querySelector(
-"#commissionGrid"
-);
+    const data = await res.json();
 
+    console.log("RAW RESPONSE:", data);
 
+    // -----------------------------
+    // Normalize response shape
+    // -----------------------------
+    const commissions = Array.isArray(data)
+      ? data
+      : data.commissions
+      ? data.commissions
+      : [];
 
-async function loadCommissions(){
+    if (!Array.isArray(commissions)) {
+      throw new Error("Invalid commission format from Worker");
+    }
 
+    grid.innerHTML = "";
 
-const res =
-await fetch(API);
+    // -----------------------------
+    // Render cards safely
+    // -----------------------------
+    commissions.forEach(c => {
+      const card = document.createElement("div");
+      card.className = "commission-card glass";
 
+      const img = document.createElement("img");
+      img.src = c.image || "";
+      img.alt = c.title || "Commission Image";
 
+      const content = document.createElement("div");
+      content.className = "content";
 
-const commissions =
-await res.json();
+      const title = document.createElement("h2");
+      title.textContent = c.title || "Untitled";
 
+      const price = document.createElement("h3");
+      price.textContent = c.price || "—";
 
+      const details = document.createElement("p");
+      details.textContent = c.details || "";
 
-grid.innerHTML="";
+      const btn = document.createElement("button");
+      btn.textContent = "Request";
 
+      content.appendChild(title);
+      content.appendChild(price);
+      content.appendChild(details);
+      content.appendChild(btn);
 
+      card.appendChild(img);
+      card.appendChild(content);
 
-commissions.forEach(c=>{
+      grid.appendChild(card);
+    });
 
+  } catch (err) {
+    console.error("Commission load failed:", err);
 
-grid.innerHTML += `
-
-
-<div class="commission-card glass">
-
-
-<img src="${c.image}">
-
-
-<div class="content">
-
-
-<h2>
-${c.title}
-</h2>
-
-
-<h3>
-${c.price}
-</h3>
-
-
-<p>
-${c.details}
-</p>
-
-
-<button>
-Request
-</button>
-
-
-</div>
-
-
-</div>
-
-
-`;
-
-
-});
-
-
+    grid.innerHTML = `
+      <div class="commission-card glass" style="padding:20px;">
+        <h2>Failed to load commissions</h2>
+        <p>${err.message}</p>
+      </div>
+    `;
+  }
 }
-
-
 
 loadCommissions();
