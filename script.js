@@ -1,134 +1,52 @@
-/* =========================
-   STARBREW COMMISSIONS UI
-   PRODUCTION CLEAN VERSION
-========================= */
+const API = "https://commissions.crysthigpen.workers.dev";
 
-const ENDPOINT = "https://commissions.crysthigpen.workers.dev";
-
-/* =========================
-   INIT
-========================= */
 document.addEventListener("DOMContentLoaded", () => {
-  initCommissions();
+  loadCommissions();
   initForm();
 });
 
-/* =========================
-   COMMISSIONS LOADER
-========================= */
-async function initCommissions() {
-  const container = document.getElementById("commission-container");
+async function loadCommissions() {
+  const el = document.getElementById("commission-container");
 
-  if (!container) {
-    console.error("Missing #commission-container");
-    return;
-  }
+  const res = await fetch(`${API}/commissions`);
+  const data = await res.json();
 
-  try {
-    const res = await fetch(`${ENDPOINT}/commissions`);
-    const data = await res.json();
-
-    if (!Array.isArray(data)) {
-      console.error("Invalid commissions response:", data);
-      container.innerHTML = "<p>No commissions available.</p>";
-      return;
-    }
-
-    renderCommissions(data, container);
-
-  } catch (err) {
-    console.error("Commission load error:", err);
-    container.innerHTML = "<p class='error'>Failed to load commissions.</p>";
-  }
-}
-
-/* =========================
-   RENDER COMMISSIONS
-========================= */
-function renderCommissions(items, container) {
-  container.innerHTML = "";
-
-  if (!items.length) {
-    container.innerHTML = "<p>No commissions available.</p>";
-    return;
-  }
-
-  const html = items.map(item => `
-    <div class="commission-card">
-
-      ${item.image
-        ? `<img class="commission-img" src="${escapeHTML(item.image)}" alt="">`
-        : ""
-      }
-
-      <div class="commission-content">
-        <h3>${escapeHTML(item.title || "Untitled")}</h3>
-        <p>${escapeHTML(item.description || "")}</p>
-
-        <div class="commission-meta">
-          <span class="price">${escapeHTML(item.price || "")}</span>
-          <span class="status status-${escapeHTML(item.status || "open")}">
-            ${escapeHTML(item.status || "open")}
-          </span>
-        </div>
-      </div>
-
+  el.innerHTML = data.map(c => `
+    <div class="card">
+      ${c.image ? `<img src="${c.image}">` : ""}
+      <h3>${c.name}</h3>
+      <p>${c.description}</p>
+      <span>${c.price}</span>
+      <small>${c.status}</small>
     </div>
   `).join("");
-
-  container.innerHTML = html;
 }
 
-/* =========================
-   FORM HANDLER
-========================= */
 function initForm() {
   const form = document.getElementById("queueForm");
-  const status = document.getElementById("formStatus");
-
-  if (!form) return;
+  const status = document.getElementById("status");
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    if (status) status.textContent = "Submitting...";
+    status.textContent = "Submitting...";
 
-    const payload = Object.fromEntries(new FormData(form));
+    const data = Object.fromEntries(new FormData(form));
 
-    try {
-      const res = await fetch(`${ENDPOINT}/submit`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+    const res = await fetch(`${API}/submit`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
 
-      const result = await res.json();
+    const result = await res.json();
 
-      if (result.success) {
-        if (status) status.textContent = "Submitted successfully!";
-        form.reset();
-      } else {
-        if (status) status.textContent = "Submission failed.";
-        console.error("Submit error:", result);
-      }
-
-    } catch (err) {
-      console.error("Submit failed:", err);
-      if (status) status.textContent = "Error submitting form.";
+    if (result.success) {
+      status.textContent = "Submitted!";
+      form.reset();
+    } else {
+      status.textContent = "Failed to submit.";
+      console.log(result);
     }
   });
-}
-
-/* =========================
-   SECURITY HELPER
-========================= */
-function escapeHTML(str) {
-  return String(str)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
 }
