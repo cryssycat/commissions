@@ -1,241 +1,651 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lyra Vance — Portfolio</title>
+<meta name="description" content="Portfolio, galleries, and booking information.">
 
-<title>StarHub Commissions</title>
+<!-- =========================================================
+     DROP-IN NOTES (delete this comment block before shipping)
+     - Replace "Lyra Vance" and all copy with real name/text.
+     - Swap every element with class="ph-img" for a real <img>,
+       or just change the background-image on .ph-img.
+     - Header banner: replace #headerBanner background/content.
+     - Gallery images: edit the `galleryData` array near the
+       bottom of the <script> section (category, caption, src).
+     - Single static HTML file — works as a GitHub Pages
+       index.html with no build step, no dependencies.
+     ========================================================= -->
 
-<link rel="stylesheet" href="style.css">
+<style>
+  :root{
+    --cream:       #fffaf3;
+    --vanilla:     #fff1de;
+    --waffle:      #e8b871;
+    --waffle-d:    #c78f45;
+    --strawberry:  #ff7fa3;
+    --strawberry-d:#e0567e;
+    --choc:        #7a4a2b;
+    --choc-d:      #5a341c;
+    --mint:        #8fdcc4;
+    --mint-d:      #5cb89a;
+    --cherry:      #e6394f;
+    --ink:         #5a3c2e;
+    --ink-soft:    #97785f;
+    --white:       #ffffff;
+    --glass-bg:    rgba(255,250,243,0.55);
+    --glass-bg-2:  rgba(255,250,243,0.35);
+    --glass-brd:   rgba(255,255,255,0.65);
+    --glass-brd-hi:rgba(224,86,126,0.5);
+    --shadow:      0 10px 30px rgba(122,74,43,0.18);
+    --radius:      22px;
+    --font-display: 'Fredoka', 'Baloo 2', 'Comic Sans MS', sans-serif;
+    --font-body:    'Nunito', 'Poppins', 'Segoe UI', sans-serif;
+    --font-mono:    'Nunito', monospace;
+  }
 
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+
+  body{
+    font-family:var(--font-body);
+    color:var(--ink);
+    min-height:100vh;
+    overflow-x:hidden;
+    line-height:1.65;
+    background:
+      radial-gradient(circle at 14% 8%, rgba(255,255,255,0.75), transparent 42%),
+      radial-gradient(circle at 88% 92%, rgba(255,127,163,0.2), transparent 45%),
+      linear-gradient(160deg, var(--cream) 0%, var(--vanilla) 55%, #ffe6ef 100%);
+    background-attachment:fixed;
+  }
+
+  .glow-orb{ position:fixed; border-radius:50%; filter:blur(80px); z-index:0; pointer-events:none; }
+  .glow-orb.a{ width:400px; height:400px; top:-130px; left:-110px; background:radial-gradient(circle, rgba(255,127,163,0.3), transparent 70%); }
+  .glow-orb.b{ width:440px; height:440px; bottom:-170px; right:-130px; background:radial-gradient(circle, rgba(143,220,196,0.28), transparent 70%); }
+
+  a{ color:inherit; text-decoration:none; }
+
+  /* ---------- STATIC header banner (identical on every page) ---------- */
+  #headerBanner{
+    position:relative; z-index:2;
+    height:clamp(160px, 30vw, 300px);
+    width:100%;
+    display:flex; align-items:flex-end; justify-content:center; text-align:center;
+    overflow:hidden;
+    background: linear-gradient(180deg, var(--strawberry) 0%, #ffb0c6 55%, var(--vanilla) 100%);
+    border-bottom:6px solid var(--waffle);
+    box-shadow:0 6px 24px rgba(122,74,43,0.22);
+  }
+  #headerBanner::before{
+    /* placeholder banner image slot — swap this drip overlay for a real photo */
+    content:"";
+    position:absolute; inset:0;
+    background-image:
+      radial-gradient(circle at 8% 92%, var(--choc) 0 6px, transparent 7px),
+      radial-gradient(circle at 22% 88%, var(--choc) 0 5px, transparent 6px),
+      radial-gradient(circle at 40% 94%, var(--choc) 0 7px, transparent 8px),
+      radial-gradient(circle at 58% 89%, var(--choc) 0 5px, transparent 6px),
+      radial-gradient(circle at 74% 93%, var(--choc) 0 6px, transparent 7px),
+      radial-gradient(circle at 90% 90%, var(--choc) 0 6px, transparent 7px),
+      linear-gradient(180deg, transparent 0%, transparent 82%, var(--choc) 82%, var(--choc) 100%);
+    opacity:.9;
+    mask-image:linear-gradient(180deg, transparent 0%, transparent 70%, black 82%);
+    -webkit-mask-image:linear-gradient(180deg, transparent 0%, transparent 70%, black 82%);
+  }
+  #headerBanner::after{
+    content:"🍒"; position:absolute; top:14px; left:50%; transform:translateX(-50%);
+    font-size:1.6rem; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.25));
+  }
+  .banner-inner{ position:relative; z-index:1; padding:1rem 1rem 1.6rem; }
+  .banner-eyebrow{
+    font-family:var(--font-body); font-weight:800; font-size:.7rem; letter-spacing:.3em;
+    text-transform:uppercase; color:var(--choc-d); display:block; margin-bottom:.5rem;
+  }
+  .banner-title{
+    font-family:var(--font-display); font-weight:600;
+    font-size:clamp(2.4rem, 7vw, 4.2rem);
+    color:var(--white);
+    letter-spacing:.01em;
+    text-shadow:0 3px 0 rgba(122,74,43,0.25), 0 0 20px rgba(255,255,255,0.4);
+  }
+  .banner-sub{
+    font-size:.9rem; color:var(--choc-d); margin-top:.4rem;
+    font-weight:700; letter-spacing:.02em;
+  }
+  .banner-placeholder-tag{
+    position:absolute; top:10px; right:14px; z-index:2;
+    font-family:var(--font-body); font-weight:700; font-size:.6rem; letter-spacing:.08em;
+    color:var(--choc-d); background:rgba(255,255,255,0.85);
+    padding:4px 10px; border-radius:20px; text-transform:uppercase;
+  }
+
+  /* ---------- Cherry-on-top tab indicator (signature element) ---------- */
+  .cherry-indicator{
+    width:20px; height:20px; border-radius:50%; flex:0 0 auto;
+    background:var(--cherry);
+    box-shadow:0 0 0 4px rgba(255,255,255,0.75), 0 3px 8px rgba(122,74,43,0.3);
+    position:relative; transition:background .4s ease;
+  }
+  .cherry-indicator::before{
+    content:""; position:absolute; top:-7px; left:50%; width:2px; height:8px;
+    background:var(--choc); transform:translateX(-50%) rotate(18deg); border-radius:2px;
+  }
+  .cherry-indicator::after{
+    content:""; position:absolute; top:3px; left:4px; width:5px; height:5px;
+    border-radius:50%; background:rgba(255,255,255,0.8);
+  }
+
+  /* ---------- STATIC nav (identical markup on every page) ---------- */
+  nav#tabNav{
+    position:sticky; top:0; z-index:10;
+    display:flex; justify-content:center;
+    background:rgba(255,250,243,0.65);
+    backdrop-filter:blur(18px) saturate(150%);
+    -webkit-backdrop-filter:blur(18px) saturate(150%);
+    border-bottom:1px solid var(--glass-brd);
+  }
+  .nav-inner{
+    display:flex; align-items:center; gap:clamp(.2rem,2vw,1.4rem);
+    max-width:920px; width:100%; padding:.7rem 1rem;
+    overflow-x:auto; scrollbar-width:none;
+  }
+  .nav-inner::-webkit-scrollbar{ display:none; }
+  .nav-brandmark{ display:flex; align-items:center; gap:.5rem; margin-right:.4rem; flex:0 0 auto; }
+  .nav-brandmark span{ font-family:var(--font-display); font-weight:600; font-size:.9rem; letter-spacing:.02em; color:var(--strawberry-d); }
+
+  .tab-btn{
+    font-family:var(--font-body); font-weight:800; font-size:.78rem; letter-spacing:.03em;
+    color:var(--ink-soft);
+    background:transparent; border:1px solid transparent;
+    padding:.55rem 1.05rem; border-radius:999px; cursor:pointer;
+    white-space:nowrap; transition:all .25s ease; flex:0 0 auto;
+  }
+  .tab-btn:hover{ color:var(--strawberry-d); border-color:var(--glass-brd-hi); background:rgba(255,255,255,0.55); }
+  .tab-btn.active{
+    color:var(--white); background:linear-gradient(135deg, var(--strawberry), var(--cherry));
+    border-color:transparent; box-shadow:0 4px 14px rgba(224,86,126,0.35);
+  }
+
+  main{ position:relative; z-index:2; max-width:1080px; margin:0 auto; padding:clamp(2rem,5vw,4rem) 1.25rem 5rem; }
+
+  .page{ display:none; animation:fadeUp .5s ease; }
+  .page.active{ display:block; }
+  @keyframes fadeUp{ from{ opacity:0; transform:translateY(14px); } to{ opacity:1; transform:translateY(0); } }
+
+  /* ---------- Glass panel ---------- */
+  .glass{
+    background:var(--glass-bg);
+    border:1px solid var(--glass-brd);
+    border-radius:var(--radius);
+    backdrop-filter:blur(14px) saturate(140%);
+    -webkit-backdrop-filter:blur(14px) saturate(140%);
+    box-shadow:var(--shadow);
+  }
+
+  /* ---------- Home / landing ---------- */
+  .hero{ text-align:center; padding:clamp(2.5rem,6vw,4.5rem) 1.5rem; margin-bottom:2.5rem; position:relative; }
+  .hero-crest{ width:80px; height:88px; margin:0 auto 1.4rem; position:relative; }
+  .hero-crest .disc{
+    width:80px; height:80px; border-radius:50% 50% 46% 46% / 55% 55% 45% 45%;
+    background:linear-gradient(160deg, var(--white) 0%, var(--strawberry) 60%, var(--waffle) 100%);
+    box-shadow:0 0 0 6px rgba(255,255,255,0.55), 0 10px 26px rgba(122,74,43,0.28);
+    position:relative;
+  }
+  .hero-crest .disc::after{
+    content:"🍨"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-size:2rem;
+  }
+  .hero h1{
+    font-family:var(--font-display); font-weight:600;
+    font-size:clamp(2.3rem, 6vw, 3.6rem); color:var(--strawberry-d); margin-bottom:.7rem;
+  }
+  .hero p.tagline{
+    font-size:1rem; color:var(--ink-soft); max-width:520px; margin:0 auto 1.8rem; font-weight:600;
+  }
+  .hero-ctas{ display:flex; gap:.9rem; justify-content:center; flex-wrap:wrap; }
+  .btn{
+    font-family:var(--font-body); font-weight:800; font-size:.78rem; letter-spacing:.03em;
+    padding:.85rem 1.7rem; border-radius:999px; cursor:pointer; transition:all .25s ease;
+    border:1px solid transparent;
+  }
+  .btn-solid{ background:linear-gradient(135deg, var(--strawberry), var(--cherry)); color:var(--white); box-shadow:0 6px 16px rgba(224,86,126,0.35); }
+  .btn-solid:hover{ transform:translateY(-2px); box-shadow:0 8px 20px rgba(224,86,126,0.45); }
+  .btn-ghost{ background:rgba(255,255,255,0.6); color:var(--strawberry-d); border-color:var(--glass-brd-hi); }
+  .btn-ghost:hover{ background:rgba(255,255,255,0.85); transform:translateY(-2px); }
+
+  .section-heading{
+    font-family:var(--font-display); font-weight:600;
+    font-size:clamp(1.6rem,3.4vw,2.1rem);
+    color:var(--strawberry-d); margin-bottom:.3rem;
+  }
+  .section-eyebrow{
+    font-family:var(--font-body); font-weight:800; font-size:.68rem; letter-spacing:.25em; text-transform:uppercase;
+    color:var(--mint-d); display:block; margin-bottom:.7rem;
+  }
+  .section-lede{ color:var(--ink-soft); max-width:640px; margin-bottom:2rem; font-size:.95rem; font-weight:600; }
+
+  .phase-strip{
+    display:flex; justify-content:space-between; align-items:center; gap:1rem;
+    padding:1.4rem 1.6rem; margin-bottom:2.4rem; flex-wrap:wrap;
+  }
+  .phase-strip .phase-item{ text-align:center; flex:1 1 100px; }
+  .phase-strip .phase-glyph{ font-size:1.4rem; margin-bottom:.3rem; }
+  .phase-strip .phase-label{ font-family:var(--font-body); font-weight:800; font-size:.66rem; letter-spacing:.08em; color:var(--ink-soft); text-transform:uppercase; }
+
+  .teaser-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1rem; }
+  .teaser-card{ padding:.6rem; text-align:center; cursor:pointer; transition:transform .3s ease, border-color .3s ease; }
+  .teaser-card:hover{ transform:translateY(-4px) rotate(-1deg); border-color:var(--glass-brd-hi); }
+  .teaser-card .ph-img{ aspect-ratio:3/4; border-radius:16px; margin-bottom:.6rem; }
+  .teaser-card .teaser-label{ font-family:var(--font-body); font-weight:800; font-size:.7rem; letter-spacing:.04em; text-transform:uppercase; color:var(--strawberry-d); }
+
+  /* ---------- Placeholder image block ---------- */
+  .ph-img{
+    width:100%; display:block; border-radius:16px;
+    background:
+      repeating-linear-gradient(120deg, rgba(255,255,255,0.35) 0 10px, transparent 10px 20px),
+      linear-gradient(135deg, #ffd7e2, #ffe9c9);
+    border:2px dashed rgba(224,86,126,0.4);
+    position:relative; overflow:hidden;
+  }
+  .ph-img::before{
+    content:attr(data-label);
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-body); font-weight:800; font-size:.72rem; letter-spacing:.04em; text-transform:uppercase;
+    color:var(--choc-d); text-align:center; padding:1rem; opacity:.8;
+  }
+  .ph-img::after{
+    content:"🍒"; position:absolute; top:8px; right:10px; font-size:.85rem; opacity:.8;
+  }
+
+  /* ---------- Gallery page ---------- */
+  .gallery-section{ margin-bottom:3.2rem; }
+  .gallery-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(190px,1fr)); gap:1rem; }
+  .gallery-item{ cursor:pointer; overflow:hidden; padding:.55rem; transition:transform .3s ease, border-color .3s; }
+  .gallery-item:hover{ transform:translateY(-3px); border-color:var(--glass-brd-hi); }
+  .gallery-item .ph-img{ aspect-ratio:4/5; margin-bottom:.55rem; }
+  .gallery-item .cap{ font-size:.8rem; color:var(--ink); font-weight:700; }
+  .gallery-item .cap small{ display:block; font-family:var(--font-body); font-weight:700; font-size:.62rem; letter-spacing:.06em; color:var(--mint-d); text-transform:uppercase; margin-top:.2rem; }
+
+  /* ---------- Lightbox ---------- */
+  #lightbox{
+    position:fixed; inset:0; z-index:100; display:none;
+    align-items:center; justify-content:center; padding:2rem;
+    background:rgba(90,60,46,0.55); backdrop-filter:blur(6px);
+  }
+  #lightbox.open{ display:flex; }
+  .lb-content{ max-width:640px; width:100%; text-align:center; position:relative; }
+  .lb-content .ph-img{ aspect-ratio:4/5; max-height:72vh; margin:0 auto 1rem; border-radius:22px; }
+  .lb-cap{ color:var(--white); font-size:.9rem; font-weight:700; }
+  .lb-cap small{ display:block; font-family:var(--font-body); font-weight:700; font-size:.65rem; color:#ffe1ea; letter-spacing:.08em; text-transform:uppercase; margin-top:.3rem; }
+  #lightbox .lb-close{
+    position:absolute; top:-40px; right:0; font-family:var(--font-body); font-weight:800;
+    background:rgba(255,250,243,0.85); border:none; color:var(--strawberry-d);
+    width:34px; height:34px; border-radius:50%; cursor:pointer; font-size:1rem;
+  }
+  #lightbox .lb-nav{
+    position:absolute; top:50%; transform:translateY(-50%);
+    background:rgba(255,250,243,0.85); border:none; color:var(--strawberry-d);
+    width:42px; height:42px; border-radius:50%; cursor:pointer; font-size:1.2rem; font-weight:800;
+  }
+  #lightbox .lb-prev{ left:-10px; } #lightbox .lb-next{ right:-10px; }
+  @media (max-width:640px){
+    #lightbox .lb-nav{ position:static; transform:none; margin:0 .6rem; }
+    #lightbox .lb-navwrap{ display:flex; justify-content:center; margin-top:.8rem; }
+  }
+
+  /* ---------- TOS page ---------- */
+  .tos-block{ padding:2rem clamp(1.2rem,4vw,2.4rem); margin-bottom:1.4rem; }
+  .tos-block h3{ font-family:var(--font-display); font-weight:600; color:var(--strawberry-d); font-size:1.3rem; margin-bottom:.6rem; }
+  .tos-block p, .tos-block li{ font-size:.9rem; color:var(--ink-soft); margin-bottom:.5rem; font-weight:600; }
+  .tos-block ul{ padding-left:1.2rem; }
+  .tos-updated{ font-family:var(--font-body); font-weight:800; font-size:.68rem; letter-spacing:.06em; color:var(--mint-d); text-transform:uppercase; margin-bottom:2rem; display:block; }
+
+  /* ---------- Find me page ---------- */
+  .find-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:1.1rem; margin-bottom:2rem; }
+  .find-card{ padding:1.6rem; display:flex; align-items:center; gap:1rem; transition:border-color .25s, transform .25s; }
+  .find-card:hover{ transform:translateY(-3px) rotate(-1deg); border-color:var(--glass-brd-hi); }
+  .find-glyph{
+    width:46px; height:46px; border-radius:50%; flex:0 0 auto;
+    display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(135deg, var(--strawberry), var(--mint));
+    font-size:1.2rem; box-shadow:0 4px 12px rgba(224,86,126,0.3);
+  }
+  .find-name{ font-family:var(--font-body); font-weight:800; font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--strawberry-d); margin-bottom:.2rem; }
+  .find-handle{ font-size:.85rem; color:var(--ink-soft); font-weight:600; }
+  .contact-panel{ padding:2rem clamp(1.2rem,4vw,2.4rem); text-align:center; }
+  .contact-panel p{ color:var(--ink-soft); font-size:.92rem; margin-bottom:1.2rem; font-weight:600; }
+
+  /* ---------- Footer ---------- */
+  footer{
+    position:relative; z-index:2; text-align:center; padding:2.4rem 1rem 3rem;
+    font-family:var(--font-body); font-weight:800; font-size:.65rem; letter-spacing:.06em;
+    color:var(--ink-soft); text-transform:uppercase;
+  }
+
+  @media (max-width:600px){
+    .nav-brandmark span{ display:none; }
+    .phase-strip{ justify-content:center; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; }
+  }
+</style>
 </head>
-
-
 <body>
 
+<div class="glow-orb a"></div>
+<div class="glow-orb b"></div>
 
-<header class="hero glass">
-
-<h1>
-✨ Starsundae Commissions
-</h1>
-
-<p>
-Bring your art dreams to life.
-</p>
-
+<!-- ===================== STATIC HEADER BANNER (identical on every page) ===================== -->
+<header id="headerBanner">
+  <span class="banner-placeholder-tag">banner image slot — 1600×600</span>
+  <div class="banner-inner">
+    <span class="banner-eyebrow">Portfolio &amp; Booking</span>
+    <div class="banner-title">Lyra Vance</div>
+    <div class="banner-sub">portraits, served with extra toppings</div>
+  </div>
 </header>
 
+<!-- ===================== STATIC TAB NAV (identical markup on every page) ===================== -->
+<nav id="tabNav">
+  <div class="nav-inner">
+    <div class="nav-brandmark">
+      <div class="cherry-indicator" id="cherryIndicator"></div>
+      <span>LV</span>
+    </div>
+    <button class="tab-btn active" data-page="home">Home</button>
+    <button class="tab-btn" data-page="gallery">Gallery</button>
+    <button class="tab-btn" data-page="tos">Terms</button>
+    <button class="tab-btn" data-page="findme">Find Me</button>
+  </div>
+</nav>
 
+<main>
 
-<section>
+  <!-- ===================== PAGE: HOME ===================== -->
+  <section class="page active" id="page-home">
+    <div class="hero glass">
+      <div class="hero-crest"><div class="disc"></div></div>
+      <h1>Welcome — dig in.</h1>
+      <p class="tagline">A bright, scoopable studio for portraits — headshots to full body work, layered up with a little fudge and a cherry on top.</p>
+      <div class="hero-ctas">
+        <button class="btn btn-solid" data-goto="gallery">View Gallery</button>
+        <button class="btn btn-ghost" data-goto="findme">Book a Session</button>
+      </div>
+    </div>
 
-<h2>
-Available Commissions
-</h2>
+    <div class="phase-strip glass">
+      <div class="phase-item"><div class="phase-glyph">🍨</div><div class="phase-label">Est. 2021</div></div>
+      <div class="phase-item"><div class="phase-glyph">🍓</div><div class="phase-label">4 Galleries</div></div>
+      <div class="phase-item"><div class="phase-glyph">🍫</div><div class="phase-label">Studio + Onsite</div></div>
+      <div class="phase-item"><div class="phase-glyph">🍒</div><div class="phase-label">Booking Open</div></div>
+    </div>
 
-  
-<div id="commissionGrid"
-class="commission-grid">
+    <span class="section-eyebrow">Today's Scoop</span>
+    <h2 class="section-heading">Recent Favorites</h2>
+    <p class="section-lede">A small sample from each gallery category — visit the full Gallery tab to see everything, lightboxed.</p>
 
+    <div class="teaser-grid">
+      <div class="teaser-card glass" data-goto="gallery">
+        <div class="ph-img" data-label="Headshot ①"></div>
+        <div class="teaser-label">Headshot</div>
+      </div>
+      <div class="teaser-card glass" data-goto="gallery">
+        <div class="ph-img" data-label="Halfbody ①"></div>
+        <div class="teaser-label">Half Body</div>
+      </div>
+      <div class="teaser-card glass" data-goto="gallery">
+        <div class="ph-img" data-label="Fullbody ①"></div>
+        <div class="teaser-label">Full Body</div>
+      </div>
+      <div class="teaser-card glass" data-goto="gallery">
+        <div class="ph-img" data-label="Extras ①"></div>
+        <div class="teaser-label">Extras</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PAGE: GALLERY ===================== -->
+  <section class="page" id="page-gallery">
+    <span class="section-eyebrow">The Work</span>
+    <h2 class="section-heading">Gallery</h2>
+    <p class="section-lede">Sorted by type — click any frame to open it full size.</p>
+    <div id="galleryContainer"><!-- populated by JS from galleryData --></div>
+  </section>
+
+  <!-- ===================== PAGE: TOS ===================== -->
+  <section class="page" id="page-tos">
+    <span class="section-eyebrow">Please Read</span>
+    <h2 class="section-heading">Terms of Service</h2>
+    <span class="tos-updated">Last updated — replace with real date</span>
+
+    <div class="tos-block glass">
+      <h3>Usage &amp; Licensing</h3>
+      <p>Images on this site are shared for portfolio viewing only. No image may be downloaded, reproduced, or redistributed without written permission.</p>
+    </div>
+
+    <div class="tos-block glass">
+      <h3>Booking &amp; Payment</h3>
+      <ul>
+        <li>A non-refundable deposit is required to hold your session date.</li>
+        <li>Full payment is due at or before the session.</li>
+        <li>Rescheduling requires at least 48 hours' notice.</li>
+      </ul>
+    </div>
+
+    <div class="tos-block glass">
+      <h3>Model &amp; Content Release</h3>
+      <p>By booking a session you agree to the model release terms provided at booking, including which images may be used for portfolio and promotional purposes.</p>
+    </div>
+
+    <div class="tos-block glass">
+      <h3>Conduct</h3>
+      <p>A respectful, professional environment is maintained for every session. Any violation of mutual respect ends the session immediately, with no refund.</p>
+    </div>
+
+    <div class="tos-block glass">
+      <h3>Contact for Questions</h3>
+      <p>Reach out via the Find Me page before booking if any of the above needs clarifying.</p>
+    </div>
+  </section>
+
+  <!-- ===================== PAGE: FIND ME ===================== -->
+  <section class="page" id="page-findme">
+    <span class="section-eyebrow">Say Hello</span>
+    <h2 class="section-heading">Find Me</h2>
+    <p class="section-lede">Every corner of the internet where this studio actually shows up.</p>
+
+    <div class="find-grid">
+      <a class="find-card glass" href="#" target="_blank" rel="noopener">
+        <div class="find-glyph">📷</div>
+        <div><div class="find-name">Instagram</div><div class="find-handle">@yourhandle</div></div>
+      </a>
+      <a class="find-card glass" href="#" target="_blank" rel="noopener">
+        <div class="find-glyph">📝</div>
+        <div><div class="find-name">Booking Form</div><div class="find-handle">yoursite.com/book</div></div>
+      </a>
+      <a class="find-card glass" href="#" target="_blank" rel="noopener">
+        <div class="find-glyph">✉️</div>
+        <div><div class="find-name">Email</div><div class="find-handle">hello@yourdomain.com</div></div>
+      </a>
+      <a class="find-card glass" href="#" target="_blank" rel="noopener">
+        <div class="find-glyph">💬</div>
+        <div><div class="find-name">Discord</div><div class="find-handle">studio server invite</div></div>
+      </a>
+      <a class="find-card glass" href="#" target="_blank" rel="noopener">
+        <div class="find-glyph">🎵</div>
+        <div><div class="find-name">TikTok</div><div class="find-handle">@yourhandle</div></div>
+      </a>
+      <a class="find-card glass" href="#" target="_blank" rel="noopener">
+        <div class="find-glyph">🐦</div>
+        <div><div class="find-name">Twitter / X</div><div class="find-handle">@yourhandle</div></div>
+      </a>
+    </div>
+
+    <div class="contact-panel glass">
+      <p>Prefer a direct note? Send session inquiries and availability questions here.</p>
+      <button class="btn btn-solid">Send a Message</button>
+    </div>
+  </section>
+
+</main>
+
+<footer>Lyra Vance Studio · placeholder portfolio template · sprinkles optional</footer>
+
+<!-- ===================== LIGHTBOX ===================== -->
+<div id="lightbox">
+  <div class="lb-content">
+    <button class="lb-close" id="lbClose">✕</button>
+    <div class="ph-img" id="lbImg" data-label="Image"></div>
+    <div class="lb-cap" id="lbCap">Caption<small>Category</small></div>
+    <div class="lb-navwrap">
+      <button class="lb-nav lb-prev" id="lbPrev">‹</button>
+      <button class="lb-nav lb-next" id="lbNext">›</button>
+    </div>
+  </div>
 </div>
 
-</section>
-
-
-
-
-
-<section class="glass fees-section">
-
-
-<h2>
-Additional Fees
-</h2>
-
-
-<div class="fees">
-<span>
-+ Shading +$5
-</span>
-
-<span>
-+ Complex Background $15
-</span>
-
-
-<span>
-+ Complex Character Fee $10
-</span>
-
-
-<span>
-+ Commercial Use $26-50
-</span>
-
-
-<span>
-+ Rush Order $20
-</span>
-
-
-</div>
-
-
-</section>
-
-
-<section class="glass tos-card">
-
-    <h2>Terms of Service</h2>
-
-    <ul class="tos-list">
-        <li>Payment is required before work begins unless otherwise agreed.</li>
-      
-        <li> Refunds will not be given once a commission has started.</li>
-
-        <li>Please provide clear references and a detailed description of your commission.</li>
-
-        <li>Major changes after the sketch has been approved may require an additional fee.</li>
-
-        <li>Completion times vary depending on workload and complexity.</li>
-
-        <li>I reserve the right to decline any commission that I am uncomfortable accepting.</li>
-
-        <li>Personal commissions are for personal use only unless commercial rights are purchased.</li>
-
-        <li>By submitting this form, you acknowledge that you have read and agree to these terms.</li>
-    </ul>
-
-</section>
-
-
-
-<section class="glass form-card">
-
-
-<h2>
-Commission Request
-</h2>
-
-
-<form id="commissionForm">
-
-
-<input
-name="name"
-placeholder="Your Name"
-required
->
-
-
-
-<input
-name="email"
-placeholder="Discord"
-required
->
-
-
-
-
-<select name="commission">
-
-
-<option>
-Icon / Headshot
-</option>
-
-<option>
-Half Body
-</option>
- 
-
-<option>
-Full Body
-</option>
- 
-
-<option>
-Weapon Design
-</option>
-
-  
-<option>
-Outfit Design
-</option>
-  
-
-<option>
-Reference Sheet
-</option>
-
-<option>
-VTuber Logo
-</option>
-
-  
-
-<option>
-Watermark
-</option>
-
-<option>
-Collar Design
-</option>
-
-
-
-
-</select>
-
-
-
-
-
-<textarea
-name="details"
-placeholder="Tell me about your idea"
-required>
-</textarea>
-
-
-
-
-
-<input
-name="reference"
-placeholder="Reference link (optional)"
->
-
-
-
-
-<button type="submit">
-
-Join Queue
-
-</button>
-
-
-
-</form>
-
-
-<p id="message"></p>
-
-
-</section>
-
-
-
-
-
-<script src="script.js"></script>
-
+<script>
+(function(){
+  /* ---------- Static tab navigation (shared across all "pages") ---------- */
+  var tabs = document.querySelectorAll('.tab-btn');
+  var pages = document.querySelectorAll('.page');
+  var cherryIndicator = document.getElementById('cherryIndicator');
+  var colorMap = {
+    home:    '#e6394f',
+    gallery: '#ff7fa3',
+    tos:     '#7a4a2b',
+    findme:  '#5cb89a'
+  };
+
+  function showPage(name, updateHash){
+    pages.forEach(function(p){ p.classList.toggle('active', p.id === 'page-' + name); });
+    tabs.forEach(function(t){ t.classList.toggle('active', t.dataset.page === name); });
+    cherryIndicator.style.background = colorMap[name] || colorMap.home;
+    if(updateHash !== false){ history.replaceState(null,'','#' + name); }
+    window.scrollTo({ top:0, behavior:'instant' in window ? 'instant':'auto' });
+  }
+
+  tabs.forEach(function(btn){
+    btn.addEventListener('click', function(){ showPage(btn.dataset.page); });
+  });
+  document.querySelectorAll('[data-goto]').forEach(function(el){
+    el.addEventListener('click', function(){ showPage(el.dataset.goto); });
+  });
+
+  var initial = (location.hash || '#home').replace('#','');
+  if(!colorMap.hasOwnProperty(initial)) initial = 'home';
+  showPage(initial, false);
+
+  /* ---------- Gallery data — edit this to swap in real images ---------- */
+  var galleryData = [
+    { cat:'headshot', label:'Headshot', items:[
+      {src:'', caption:'Studio Headshot — Warm Light'},
+      {src:'', caption:'Studio Headshot — Cool Light'},
+      {src:'', caption:'Natural Light Headshot'},
+      {src:'', caption:'B&amp;W Headshot Study'}
+    ]},
+    { cat:'halfbody', label:'Half Body', items:[
+      {src:'', caption:'Half Body — Editorial'},
+      {src:'', caption:'Half Body — Casual'},
+      {src:'', caption:'Half Body — Studio Backdrop'}
+    ]},
+    { cat:'fullbody', label:'Full Body', items:[
+      {src:'', caption:'Full Body — Location Shoot'},
+      {src:'', caption:'Full Body — Motion Study'},
+      {src:'', caption:'Full Body — Studio'},
+      {src:'', caption:'Full Body — Silhouette'}
+    ]},
+    { cat:'extras', label:'Extras', items:[
+      {src:'', caption:'Detail Shot'},
+      {src:'', caption:'Behind the Scenes'},
+      {src:'', caption:'Concept Test'}
+    ]}
+  ];
+
+  var galleryContainer = document.getElementById('galleryContainer');
+  var flatImages = []; // flattened for lightbox prev/next
+
+  galleryData.forEach(function(group){
+    var section = document.createElement('div');
+    section.className = 'gallery-section';
+
+    var h = document.createElement('h3');
+    h.className = 'section-heading';
+    h.style.fontSize = '1.35rem';
+    h.textContent = group.label;
+    section.appendChild(h);
+
+    var grid = document.createElement('div');
+    grid.className = 'gallery-grid';
+
+    group.items.forEach(function(item){
+      var idx = flatImages.length;
+      flatImages.push({ caption:item.caption, label:group.label, src:item.src });
+
+      var card = document.createElement('div');
+      card.className = 'gallery-item glass';
+      card.setAttribute('data-index', idx);
+
+      var img = document.createElement('div');
+      img.className = 'ph-img';
+      img.setAttribute('data-label', group.label);
+
+      var cap = document.createElement('div');
+      cap.className = 'cap';
+      cap.innerHTML = item.caption + '<small>' + group.label + '</small>';
+
+      card.appendChild(img);
+      card.appendChild(cap);
+      card.addEventListener('click', function(){ openLightbox(idx); });
+      grid.appendChild(card);
+    });
+
+    section.appendChild(grid);
+    galleryContainer.appendChild(section);
+  });
+
+  /* ---------- Lightbox ---------- */
+  var lightbox = document.getElementById('lightbox');
+  var lbImg = document.getElementById('lbImg');
+  var lbCap = document.getElementById('lbCap');
+  var lbClose = document.getElementById('lbClose');
+  var lbPrev = document.getElementById('lbPrev');
+  var lbNext = document.getElementById('lbNext');
+  var currentIndex = 0;
+
+  function openLightbox(idx){
+    currentIndex = idx;
+    renderLightbox();
+    lightbox.classList.add('open');
+  }
+  function renderLightbox(){
+    var item = flatImages[currentIndex];
+    lbImg.setAttribute('data-label', item.label);
+    lbCap.innerHTML = item.caption + '<small>' + item.label + '</small>';
+  }
+  function closeLightbox(){ lightbox.classList.remove('open'); }
+
+  lbClose.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', function(e){ if(e.target === lightbox) closeLightbox(); });
+  lbPrev.addEventListener('click', function(){ currentIndex = (currentIndex - 1 + flatImages.length) % flatImages.length; renderLightbox(); });
+  lbNext.addEventListener('click', function(){ currentIndex = (currentIndex + 1) % flatImages.length; renderLightbox(); });
+  document.addEventListener('keydown', function(e){
+    if(!lightbox.classList.contains('open')) return;
+    if(e.key === 'Escape') closeLightbox();
+    if(e.key === 'ArrowLeft') lbPrev.click();
+    if(e.key === 'ArrowRight') lbNext.click();
+  });
+
+  window.addEventListener('hashchange', function(){
+    var name = location.hash.replace('#','');
+    if(colorMap.hasOwnProperty(name)) showPage(name, false);
+  });
+})();
+</script>
 
 </body>
-
 </html>
