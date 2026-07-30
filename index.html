@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Starsundae— Portfolio</title>
+<title>Lyra Vance — Portfolio</title>
 <meta name="description" content="Portfolio, galleries, and booking information.">
 
 <!-- =========================================================
@@ -258,6 +258,9 @@
   .ph-img::after{
     content:"🍒"; position:absolute; top:8px; right:10px; font-size:.85rem; opacity:.8;
   }
+  .ph-img.has-image{ background-size:cover; background-position:center; background-repeat:no-repeat; }
+  .ph-img.has-image::before{ content:none; }
+  .ph-img.has-image::after{ display:none; }
 
   /* ---------- Gallery page ---------- */
   .gallery-section{ margin-bottom:3.2rem; }
@@ -343,9 +346,9 @@
 <header id="headerBanner">
   <span class="banner-placeholder-tag">banner image slot — 1600×600</span>
   <div class="banner-inner">
-    <span class="banner-eyebrow">Portfolio &amp; Commissions</span>
-    <div class="banner-title">Starsundae</div>
-    <div class="banner-sub">art, served with extra toppings</div>
+    <span class="banner-eyebrow">Portfolio &amp; Booking</span>
+    <div class="banner-title">Lyra Vance</div>
+    <div class="banner-sub">portraits, served with extra toppings</div>
   </div>
 </header>
 
@@ -354,7 +357,7 @@
   <div class="nav-inner">
     <div class="nav-brandmark">
       <div class="cherry-indicator" id="cherryIndicator"></div>
-      <span>SS</span>
+      <span>LV</span>
     </div>
     <button class="tab-btn active" data-page="home">Home</button>
     <button class="tab-btn" data-page="gallery">Gallery</button>
@@ -370,7 +373,7 @@
     <div class="hero glass">
       <div class="hero-crest"><div class="disc"></div></div>
       <h1>Welcome — dig in.</h1>
-      <p class="tagline">A bright, scoopable art studio for headshots to full body work, layered up with a little fudge and a cherry on top.</p>
+      <p class="tagline">A bright, scoopable studio for portraits — headshots to full body work, layered up with a little fudge and a cherry on top.</p>
       <div class="hero-ctas">
         <button class="btn btn-solid" data-goto="gallery">View Gallery</button>
         <button class="btn btn-ghost" data-goto="findme">Book a Session</button>
@@ -378,10 +381,10 @@
     </div>
 
     <div class="phase-strip glass">
-      <div class="phase-item"><div class="phase-glyph">🍨</div><div class="phase-label">Est. 2026</div></div>
-      <div class="phase-item"><div class="phase-glyph">🍓</div><div class="phase-label">Currently Open</div></div>
-      <div class="phase-item"><div class="phase-glyph">🍫</div><div class="phase-label">DMs Open</div></div>
-      <div class="phase-item"><div class="phase-glyph">🍒</div><div class="phase-label">Trades Open</div></div>
+      <div class="phase-item"><div class="phase-glyph">🍨</div><div class="phase-label">Est. 2021</div></div>
+      <div class="phase-item"><div class="phase-glyph">🍓</div><div class="phase-label">4 Galleries</div></div>
+      <div class="phase-item"><div class="phase-glyph">🍫</div><div class="phase-label">Studio + Onsite</div></div>
+      <div class="phase-item"><div class="phase-glyph">🍒</div><div class="phase-label">Booking Open</div></div>
     </div>
 
     <span class="section-eyebrow">Today's Scoop</span>
@@ -390,19 +393,19 @@
 
     <div class="teaser-grid">
       <div class="teaser-card glass" data-goto="gallery">
-        <div class="ph-img" data-label="Headshot ①"></div>
+        <div class="ph-img" data-cat="headshot" data-label="Headshot ①"></div>
         <div class="teaser-label">Headshot</div>
       </div>
       <div class="teaser-card glass" data-goto="gallery">
-        <div class="ph-img" data-label="Halfbody ①"></div>
+        <div class="ph-img" data-cat="halfbody" data-label="Halfbody ①"></div>
         <div class="teaser-label">Half Body</div>
       </div>
       <div class="teaser-card glass" data-goto="gallery">
-        <div class="ph-img" data-label="Fullbody ①"></div>
+        <div class="ph-img" data-cat="fullbody" data-label="Fullbody ①"></div>
         <div class="teaser-label">Full Body</div>
       </div>
       <div class="teaser-card glass" data-goto="gallery">
-        <div class="ph-img" data-label="Extras ①"></div>
+        <div class="ph-img" data-cat="extras" data-label="Extras ①"></div>
         <div class="teaser-label">Extras</div>
       </div>
     </div>
@@ -543,10 +546,10 @@
   /* ---------- Gallery data — edit this to swap in real images ---------- */
   var galleryData = [
     { cat:'headshot', label:'Headshot', items:[
-      {src:'https://starsundae.pages.dev/images/images/IMG_0551.png', caption:''},
-      {src:'https://starsundae.pages.dev/images/images/JerboaIcon.png', caption:''},
-      {src:'https://starsundae.pages.dev/images/images/OtterIcon.png', caption:''},
-      {src:'https://starsundae.pages.dev/images/images/PupIcon.png', caption:''}
+      {src:'images/PupIcon.png', caption:'Studio Headshot — Warm Light'},
+      {src:'images/PupIcon.png', caption:'Studio Headshot — Cool Light'},
+      {src:'images/PupIcon.png', caption:'Natural Light Headshot'},
+      {src:'images/PupIcon.png', caption:'B&amp;W Headshot Study'}
     ]},
     { cat:'halfbody', label:'Half Body', items:[
       {src:'', caption:'Half Body — Editorial'},
@@ -594,6 +597,7 @@
       img.className = 'ph-img';
       img.setAttribute('data-label', group.label);
 
+      if(item.src){ img.classList.add('has-image'); img.style.backgroundImage = "url('" + item.src + "')"; }
       var cap = document.createElement('div');
       cap.className = 'cap';
       cap.innerHTML = item.caption + '<small>' + group.label + '</small>';
@@ -606,6 +610,19 @@
 
     section.appendChild(grid);
     galleryContainer.appendChild(section);
+  });
+
+  /* ---------- Auto-fill homepage teaser thumbnails from galleryData ---------- */
+  galleryData.forEach(function(group){
+    var firstSrc = '';
+    for (var i = 0; i < group.items.length; i++){
+      if(group.items[i].src){ firstSrc = group.items[i].src; break; }
+    }
+    var teaserImg = document.querySelector('.teaser-card .ph-img[data-cat="' + group.cat + '"]');
+    if(teaserImg && firstSrc){
+      teaserImg.classList.add('has-image');
+      teaserImg.style.backgroundImage = "url('" + firstSrc + "')";
+    }
   });
 
   /* ---------- Lightbox ---------- */
@@ -625,6 +642,8 @@
   function renderLightbox(){
     var item = flatImages[currentIndex];
     lbImg.setAttribute('data-label', item.label);
+    if(item.src){ lbImg.classList.add('has-image'); lbImg.style.backgroundImage = "url('" + item.src + "')"; }
+    else { lbImg.classList.remove('has-image'); lbImg.style.backgroundImage = ''; }
     lbCap.innerHTML = item.caption + '<small>' + item.label + '</small>';
   }
   function closeLightbox(){ lightbox.classList.remove('open'); }
